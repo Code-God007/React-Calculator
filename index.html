@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <script
+      crossorigin
+      src="https://unpkg.com/react@16/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+    <title>Simple</title>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      function Title() {
+        return (
+          <div>
+            <h1 style={{ width: "100%" }} className="display-4 mb-2">
+              MY REACT CALCULATOR
+            </h1>
+          </div>
+        );
+      }
+      function Output(props) {
+        return (
+          <input
+            style={{ width: "100%" }}
+            type="text"
+            readOnly
+            value={props.value}
+            className="mb-2"
+          />
+        );
+      }
+
+      function Screen(props) {
+        return (
+          <div>
+            <Output value={props.eval} />
+            <Output value={props.result} />
+          </div>
+        );
+      }
+
+      function Button(props) {
+        return (
+          <input
+            type="button"
+            className="btn btn-outline-primary mr-2 mt-2"
+            value={props.label}
+            onClick={props.handleClick}
+            style={{ width: "100%" }}
+          />
+        );
+      }
+
+      class Calculator extends React.Component {
+        constructor() {
+          super();
+          this.state = {
+            eval: "",
+            result: ""
+          };
+          this.handleClick = this.handleClick.bind(this);
+        }
+
+        render() {
+          return (
+            <div className="container">
+              <div style={{ display: "inline-flex", flexDirection: "column" }}>
+                <Title />
+                <Screen result={this.state.result} eval={this.state.eval} />
+                <div className="button-row" style={{ display: "flex" }}>
+                  <Button label={"Clear"} handleClick={this.handleClick} />
+                  <Button label={"Delete"} handleClick={this.handleClick} />
+                  <Button label={"."} handleClick={this.handleClick} />
+                  <Button label={"/"} handleClick={this.handleClick} />
+                </div>
+                <div className="button-row" style={{ display: "flex" }}>
+                  <Button label={"7"} handleClick={this.handleClick} />
+                  <Button label={"8"} handleClick={this.handleClick} />
+                  <Button label={"9"} handleClick={this.handleClick} />
+                  <Button label={"*"} handleClick={this.handleClick} />
+                </div>
+                <div className="button-row" style={{ display: "flex" }}>
+                  <Button label={"4"} handleClick={this.handleClick} />
+                  <Button label={"5"} handleClick={this.handleClick} />
+                  <Button label={"6"} handleClick={this.handleClick} />
+                  <Button label={"-"} handleClick={this.handleClick} />
+                </div>
+                <div className="button-row" style={{ display: "flex" }}>
+                  <Button label={"1"} handleClick={this.handleClick} />
+                  <Button label={"2"} handleClick={this.handleClick} />
+                  <Button label={"3"} handleClick={this.handleClick} />
+                  <Button label={"+"} handleClick={this.handleClick} />
+                </div>
+                <div className="button-row" style={{ display: "flex" }}>
+                  <Button label={"0"} handleClick={this.handleClick} />
+                  <Button label={"="} handleClick={this.handleClick} />
+                </div>
+              </div>
+            </div>
+          );
+        }
+        handleClick(event) {
+          const value = event.target.value;
+
+          switch (value) {
+            case "=": {
+              if (this.state.eval !== "") {
+                var res = "";
+                try {
+                  res = eval(this.state.eval);
+                } catch (err) {
+                  this.setState({ result: "Math Error" });
+                }
+                if (res === undefined) this.setState({ result: "Math Error" });
+                else this.setState({ result: res, eval: "" });
+                break;
+              }
+            }
+            case "Clear": {
+              this.setState({ eval: "", result: "" });
+              break;
+            }
+            case "Delete": {
+              var str = this.state.eval;
+              str = str.substr(0, str.length - 1);
+              this.setState({ eval: str });
+              break;
+            }
+            default: {
+              this.setState({ eval: (this.state.eval += value) });
+              break;
+            }
+          }
+        }
+      }
+      ReactDOM.render(<Calculator />, document.getElementById("root"));
+    </script>
+  </body>
+</html>
